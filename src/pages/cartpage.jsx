@@ -1,3 +1,9 @@
 export default function CartPage() {
-  return <h1>Panier</h1>
+  return(
+
+      <div>
+        <h1>Panier</h1>
+        <p>Bienvenue sur le panier !</p>
+    </div>
+  ) 
 }

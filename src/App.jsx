@@ -1,26 +1,34 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MyNavbar from './components/layout/mynavbar';
+import Footer from './components/layout/footer';
+import Layout from './components/layout/layout';
+import HomePage from './pages/homepage';
+import OffersPage from './pages/OffersPage';
+import EventsPage from './pages/EventsPage';
+import CartPage from './pages/cartpage';
+import LoginPage from './pages/loginpage';
+import ScanPage from './pages/ScanPage';
+import StatsPage from './pages/StatsPage';
 
-import { Routes, Route, Link } from "react-router-dom"
-
-import HomePage from "./pages/HomePage"
-import LoginPage from "./pages/LoginPage"
-import CartPage from "./pages/CartPage"
 
 export default function App() {
   return (
-    <div>
-      {/*test */}
-      <nav style={{ display: "flex", background: "#b8a8f1ff" }}>
-        <Link to="/">Accueil</Link>
-        <Link to="/login">Connexion</Link>
-        <Link to="/cart">Panier</Link>
-      </nav>
-
-      {/* Routes */}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/cart" element={<CartPage />} />
-      </Routes>
+    <Router>
+      <div className="d-flex flex-column min-vh-100">
+      <MyNavbar />
+      <Layout className="flex-grow-1">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="offers" element={<OffersPage />} />
+          <Route path="events" element={<EventsPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/scan" element={<ScanPage />} />
+          <Route path="/stats" element={<StatsPage />} />
+        </Routes>
+      </Layout>
+      <Footer />
     </div>
-  )
+    </Router>
+  );
 }
