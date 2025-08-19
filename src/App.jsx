@@ -14,6 +14,8 @@ import LegalNotices from './pages/Footer/LegalNotices';
 import PersonalData from './pages/Footer/PersonalData';
 import CookiesPage from './pages/Footer/CookiesPage';
 import RegisterPage from './pages/RegisterPage';
+import AccountPage from './pages/AccountPage';
+import AccountUpdatePage from './pages/AccountUpdatePage';
 
 
 
@@ -32,6 +34,8 @@ export default function App() {
           <Route path="/scan" element={<ScanPage />} />
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/account/update" element={<AccountUpdatePage />} />
 
           {/* Pages du footer */}
           <Route path="/legal" element={<LegalNotices />} />
