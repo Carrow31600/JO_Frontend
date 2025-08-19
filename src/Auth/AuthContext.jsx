@@ -126,7 +126,18 @@ export function AuthProvider({ children }) {
   // =========================
   // UPDATE PROFILE
   // =========================
-  async function updateProfile(updates) {
+async function updateProfile(updates) {
+  if (!accessToken && refreshToken) {
+    // on demande un nouveau token si celui en stock est expiré
+    await refreshAccessToken();
+  }
+
+  if (!accessToken) {
+    console.error("Aucun token disponible pour mettre à jour le profil.");
+    return false;
+  }
+
+  try {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me/`, {
       method: "PUT",
       headers: {
@@ -140,9 +151,20 @@ export function AuthProvider({ children }) {
       const data = await res.json();
       setUser(data);
       return true;
+    } else if (res.status === 401 && refreshToken) {
+
+      await refreshAccessToken();
+      return await updateProfile(updates);
+    } else {
+      const errData = await res.json();
+      console.error("Erreur updateProfile :", res.status, errData);
+      return false;
     }
+  } catch (error) {
+    console.error("Exception updateProfile :", error);
     return false;
   }
+}
 
   // =========================
   // DELETE ACCOUNT
