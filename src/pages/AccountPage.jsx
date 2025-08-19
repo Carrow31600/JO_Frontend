@@ -4,11 +4,23 @@ import { useAuth } from "../Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function AccountPage() {
-  const { user } = useAuth();
+  const { user, deleteAccount  } = useAuth();
   const navigate = useNavigate();
 
   const handleEdit = () => {
     navigate("/account/update");
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.")) {
+      const success = await deleteAccount();
+      if (success) {
+        alert("Votre compte a été supprimé avec succès.");
+        navigate('/');
+      } else {
+        alert("Une erreur est survenue lors de la suppression du compte.");
+      }
+    }
   };
 
   if (!user) {
@@ -39,6 +51,10 @@ export default function AccountPage() {
         <div className="d-grid mt-4">
           <Button variant="primary" onClick={handleEdit}>
             Modifier le compte
+          </Button>
+          <br />
+          <Button variant="danger" onClick={handleDeleteAccount}>
+            Supprimer le compte
           </Button>
         </div>
       </Card>
