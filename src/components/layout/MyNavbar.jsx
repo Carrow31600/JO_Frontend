@@ -1,17 +1,17 @@
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import logo from '../../assets/logo.png';
+import { useAuth } from '../../Auth/AuthContext';
 
 export default function MyNavbar() {
+  const auth = useAuth();
+  const user = auth?.user;
+  const logout = auth?.logout;
+
   return (
     <Navbar bg="light" data-bs-theme="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">
-          <img
-            src={logo}
-            height="40"
-            className="d-inline-block align-top"
-            alt="Logo"
-          />
+          <img src={logo} height="40" className="d-inline-block align-top" alt="Logo" />
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -21,7 +21,16 @@ export default function MyNavbar() {
             <Nav.Link href="/offers">Offres</Nav.Link>
             <Nav.Link href="/events">Épreuves</Nav.Link>
             <Nav.Link href="/cart">Panier</Nav.Link>
-            <Nav.Link href="/login">Connexion</Nav.Link>
+
+            {user ? (
+              <NavDropdown title="Mon compte" id="nav-dropdown">
+                <NavDropdown.Item href="/account">Gérer mon compte</NavDropdown.Item>
+                {logout && <NavDropdown.Item onClick={logout}>Déconnexion</NavDropdown.Item>}
+              </NavDropdown>
+            ) : (
+              <Nav.Link href="/login">Connexion</Nav.Link>
+            )}
+
             <Nav.Link href="/scan">Scan</Nav.Link>
             <Nav.Link href="/stats">Stats</Nav.Link>
           </Nav>

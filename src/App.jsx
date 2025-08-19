@@ -6,13 +6,14 @@ import HomePage from './pages/homepage';
 import OffersPage from './pages/OffersPage';
 import EventsPage from './pages/EventsPage';
 import CartPage from './pages/cartpage';
-import LoginPage from './pages/loginpage';
+import LoginPage from './pages/LoginPage';
 import ScanPage from './pages/ScanPage';
 import StatsPage from './pages/StatsPage';
 import CookieConsent from './components/layout/CookieConsent';
 import LegalNotices from './pages/Footer/LegalNotices';
 import PersonalData from './pages/Footer/PersonalData';
 import CookiesPage from './pages/Footer/CookiesPage';
+import RegisterPage from './pages/RegisterPage';
 
 
 
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/scan" element={<ScanPage />} />
           <Route path="/stats" element={<StatsPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* Pages du footer */}
           <Route path="/legal" element={<LegalNotices />} />
