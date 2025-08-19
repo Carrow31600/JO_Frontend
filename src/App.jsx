@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { AuthProvider } from './Auth/AuthContext';
 import MyNavbar from './components/layout/mynavbar';
 import Footer from './components/layout/footer';
 import Layout from './components/layout/layout';
@@ -17,35 +18,42 @@ import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
 import AccountUpdatePage from './pages/AccountUpdatePage';
 
+function AppWithRouter() {
+  const navigate = useNavigate(); // ✅ Ici, on est dans le Router
 
+  return (
+    <AuthProvider navigate={navigate}>
+      <div className="d-flex flex-column min-vh-100">
+        <MyNavbar />
+        <Layout className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="offers" element={<OffersPage />} />
+            <Route path="events" element={<EventsPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/scan" element={<ScanPage />} />
+            <Route path="/stats" element={<StatsPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/account/update" element={<AccountUpdatePage />} />
+            {/* Pages du footer */}
+            <Route path="/legal" element={<LegalNotices />} />
+            <Route path="/data" element={<PersonalData />} />
+            <Route path="/cookies" element={<CookiesPage />} />
+          </Routes>
+        </Layout>
+        <Footer />
+        <CookieConsent />
+      </div>
+    </AuthProvider>
+  );
+}
 
 export default function App() {
   return (
     <Router>
-      <div className="d-flex flex-column min-vh-100">
-      <MyNavbar />
-      <Layout className="flex-grow-1">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="offers" element={<OffersPage />} />
-          <Route path="events" element={<EventsPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/scan" element={<ScanPage />} />
-          <Route path="/stats" element={<StatsPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/account" element={<AccountPage />} />
-          <Route path="/account/update" element={<AccountUpdatePage />} />
-
-          {/* Pages du footer */}
-          <Route path="/legal" element={<LegalNotices />} />
-          <Route path="/data" element={<PersonalData/>} />
-          <Route path="/cookies" element={<CookiesPage />} />
-        </Routes>
-      </Layout>
-      <Footer />
-      <CookieConsent />
-    </div>
+      <AppWithRouter />
     </Router>
   );
 }

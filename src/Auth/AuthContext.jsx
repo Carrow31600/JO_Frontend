@@ -1,15 +1,19 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
+
 
 export function useAuth() {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children, navigate }) {
   const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(sessionStorage.getItem("access"));
   const [refreshToken, setRefreshToken] = useState(sessionStorage.getItem("refresh"));
+
+  
 
   useEffect(() => {
     if (accessToken) {
@@ -104,11 +108,13 @@ export function AuthProvider({ children }) {
   // LOGOUT
   // =========================
   function logout() {
+  
     setUser(null);
     setAccessToken(null);
     setRefreshToken(null);
     sessionStorage.removeItem("access");
     sessionStorage.removeItem("refresh");
+     if (navigate) navigate('/');
   }
 
   // =========================
