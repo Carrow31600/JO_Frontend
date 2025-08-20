@@ -1,0 +1,4 @@
+.modal-img {
+  max-height: 400px; /* limite la hauteur dans la modale */
+  object-fit: contain; /* image entièrement visible */
+}
