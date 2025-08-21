@@ -5,6 +5,7 @@ import Footer from './components/layout/footer';
 import Layout from './components/layout/layout';
 import HomePage from './pages/homepage';
 import OffersPage from './pages/OffersPage';
+import OfferUpdatePage from "./pages/OfferUpdatePage";
 import EventsPage from './pages/EventsPage';
 import CartPage from './pages/cartpage';
 import LoginPage from './pages/LoginPage';
@@ -37,6 +38,8 @@ function AppWithRouter() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/account" element={<AccountPage />} />
             <Route path="/account/update" element={<AccountUpdatePage />} />
+            <Route path="/offers" element={<OffersPage />} />
+            <Route path="/offers/:id/edit" element={<OfferUpdatePage />} />
             {/* Pages du footer */}
             <Route path="/legal" element={<LegalNotices />} />
             <Route path="/data" element={<PersonalData />} />

@@ -1,8 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
-
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -13,8 +12,6 @@ export function AuthProvider({ children, navigate }) {
   const [accessToken, setAccessToken] = useState(sessionStorage.getItem("access"));
   const [refreshToken, setRefreshToken] = useState(sessionStorage.getItem("refresh"));
 
-  
-
   useEffect(() => {
     if (accessToken) {
       fetchUser(accessToken);
@@ -22,21 +19,57 @@ export function AuthProvider({ children, navigate }) {
   }, []);
 
   // =========================
-  // RECUPERATION DE l'UTILISATEUR
+  // FONCTION GLOBALE 
+  // =========================
+  async function fetchWithAuth(url, options = {}) {
+    let token = accessToken;
+
+    if (!token && refreshToken) {
+      token = await refreshAccessToken();
+    }
+
+    if (!token) {
+      logout();
+      throw new Error("Aucun token disponible");
+    }
+
+    const res = await fetch(url, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Si le token a expiré → on tente un refresh une seule fois
+    if (res.status === 401 && refreshToken) {
+      token = await refreshAccessToken();
+      if (!token) throw new Error("Impossible de rafraîchir le token");
+
+      const retryRes = await fetch(url, {
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return retryRes;
+    }
+
+    return res;
+  }
+
+  // =========================
+  // RECUPERATION UTILISATEUR
   // =========================
   async function fetchUser(token = accessToken) {
-    if (!token) return;
-
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       if (res.ok) {
         const data = await res.json();
         setUser(data);
-      } else if (res.status === 401 && refreshToken) {
-        await refreshAccessToken();
       } else {
         logout();
       }
@@ -51,7 +84,7 @@ export function AuthProvider({ children, navigate }) {
   async function refreshAccessToken() {
     if (!refreshToken) {
       logout();
-      return;
+      return null;
     }
 
     try {
@@ -63,16 +96,17 @@ export function AuthProvider({ children, navigate }) {
 
       if (!res.ok) {
         logout();
-        return;
+        return null;
       }
 
       const data = await res.json();
       setAccessToken(data.access);
       sessionStorage.setItem("access", data.access);
 
-      await fetchUser(data.access);
+      return data.access;
     } catch (error) {
       logout();
+      return null;
     }
   }
 
@@ -95,7 +129,6 @@ export function AuthProvider({ children, navigate }) {
       sessionStorage.setItem("access", data.access);
       sessionStorage.setItem("refresh", data.refresh);
 
-
       await fetchUser(data.access);
       return true;
     } catch (error) {
@@ -108,13 +141,12 @@ export function AuthProvider({ children, navigate }) {
   // LOGOUT
   // =========================
   function logout() {
-  
     setUser(null);
     setAccessToken(null);
     setRefreshToken(null);
     sessionStorage.removeItem("access");
     sessionStorage.removeItem("refresh");
-     if (navigate) navigate('/');
+    if (navigate) navigate("/");
   }
 
   // =========================
@@ -132,70 +164,58 @@ export function AuthProvider({ children, navigate }) {
   // =========================
   // UPDATE PROFILE
   // =========================
-async function updateProfile(updates) {
-  if (!accessToken && refreshToken) {
-    // on demande un nouveau token si celui en stock est expiré
-    await refreshAccessToken();
-  }
+  async function updateProfile(updates) {
+    try {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/users/me/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
 
-  if (!accessToken) {
-    console.error("Aucun token disponible pour mettre à jour le profil.");
-    return false;
-  }
-
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(updates),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      setUser(data);
-      return true;
-    } else if (res.status === 401 && refreshToken) {
-
-      await refreshAccessToken();
-      return await updateProfile(updates);
-    } else {
-      const errData = await res.json();
-      console.error("Erreur updateProfile :", res.status, errData);
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
+        return true;
+      } else {
+        const errData = await res.json();
+        console.error("Erreur updateProfile :", res.status, errData);
+        return false;
+      }
+    } catch (error) {
+      console.error("Exception updateProfile :", error);
       return false;
     }
-  } catch (error) {
-    console.error("Exception updateProfile :", error);
-    return false;
   }
-}
 
   // =========================
   // DELETE ACCOUNT
   // =========================
   async function deleteAccount() {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me/`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    try {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/users/me/`, {
+        method: "DELETE",
+      });
 
-    if (res.ok) {
-      logout();
-      return true;
+      if (res.ok) {
+        logout();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
     }
-    return false;
   }
 
   const value = {
     user,
     accessToken,
+    refreshToken,
     login,
     logout,
     register,
     updateProfile,
     deleteAccount,
+    fetchWithAuth,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
