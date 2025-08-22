@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Carousel, Button } from "react-bootstrap";
 import ModalInfo from "./ModalInfo";
+<<<<<<< Updated upstream
 import "./Carousel.css"; // classes communes pour les images
+=======
+import "./Carousel.css";
+>>>>>>> Stashed changes
 
 export default function CarouselLieux() {
   const [lieux, setLieux] = useState([]);
@@ -26,7 +30,7 @@ export default function CarouselLieux() {
             />
             <Carousel.Caption>
               <h3>{lieu.nom}</h3>
-              <Button variant="light" onClick={() => setSelected(lieu)}>
+              <Button variant="light" onClick={() => setSelected(sport)}>
                 Voir plus
               </Button>
             </Carousel.Caption>
