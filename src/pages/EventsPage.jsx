@@ -1,9 +1,104 @@
-export default function EventsPage() {
-  return(
+import { useState, useEffect } from "react";
+import { Container, Spinner, Alert } from "react-bootstrap";
+import { useAuth } from "../Auth/AuthContext";
+import EventFilters from "../components/Events/EventsFilters";
+import EventList from "../components/Events/EventList";
 
-      <div>
-        <h1>Epreuves</h1>
-        <p>Bienvenue sur les épreuves !</p>
-    </div>
-  ) 
+function EventsPage() {
+  const [events, setEvents] = useState([]);
+  const [offers, setOffers] = useState([]);
+  const [sports, setSports] = useState([]);
+  const [lieux, setLieux] = useState([]);
+  const [filters, setFilters] = useState({ lieu: "", sport: "", date: "" });
+  const [selections, setSelections] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { fetchWithAuth } = useAuth();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [resEvents, resOffers, resSports, resLieux] = await Promise.all([
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}/events/`),
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}/offers/`),
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}/sports/`),
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}/lieux/`),
+        ]);
+
+        if (!resEvents.ok) throw new Error("Erreur chargement événements");
+        if (!resOffers.ok) throw new Error("Erreur chargement offres");
+        if (!resSports.ok) throw new Error("Erreur chargement sports");
+        if (!resLieux.ok) throw new Error("Erreur chargement lieux");
+
+        const dataEvents = await resEvents.json();
+        const dataOffers = await resOffers.json();
+        const dataSports = await resSports.json();
+        const dataLieux = await resLieux.json();
+
+        setEvents(dataEvents);
+        setOffers(dataOffers);
+        setSports(dataSports);
+        setLieux(dataLieux);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [fetchWithAuth]);
+
+  // ======= Filtrage "contient" sur nom =======
+  const filteredEvents = events.filter((event) => {
+    const sportName = sports.find((s) => s.id === event.sport)?.nom || "";
+    const lieuName = lieux.find((l) => l.id === event.lieu)?.nom || "";
+
+    return (
+      (filters.sport ? sportName.toLowerCase().includes(filters.sport.toLowerCase()) : true) &&
+      (filters.lieu ? lieuName.toLowerCase().includes(filters.lieu.toLowerCase()) : true) &&
+      (filters.date ? event.date === filters.date : true)
+    );
+  });
+
+  if (loading) {
+    return (
+      <Container className="text-center mt-5">
+        <Spinner animation="border" />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="mt-5">
+        <Alert variant="danger">{error}</Alert>
+      </Container>
+    );
+  }
+
+  return (
+    <Container className="mt-4">
+      <h2>Événements</h2>
+
+      <EventFilters
+        filters={filters}
+        setFilters={setFilters}
+        sports={sports}
+        lieux={lieux}
+      />
+
+      <EventList
+        events={filteredEvents}
+        offers={offers}
+        selections={selections}
+        setSelections={setSelections}
+        sportsList={sports}
+        lieuxList={lieux}
+      />
+    </Container>
+  );
 }
+
+export default EventsPage;

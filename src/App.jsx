@@ -20,7 +20,7 @@ import AccountPage from './pages/AccountPage';
 import AccountUpdatePage from './pages/AccountUpdatePage';
 
 function AppWithRouter() {
-  const navigate = useNavigate(); // ✅ Ici, on est dans le Router
+  const navigate = useNavigate(); 
 
   return (
     <AuthProvider navigate={navigate}>
@@ -30,7 +30,7 @@ function AppWithRouter() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="offers" element={<OffersPage />} />
-            <Route path="events" element={<EventsPage />} />
+            <Route path="/events" element={<EventsPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/scan" element={<ScanPage />} />

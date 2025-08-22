@@ -1,0 +1,29 @@
+
+
+/* Tableau desktop */
+.events-table th:nth-child(1) { width: 15%; } /* Date */
+.events-table th:nth-child(2) { width: 25%; } /* Lieu */
+.events-table th:nth-child(3) { width: 25%; } /* Sport */
+.events-table th:nth-child(4) { width: 15%; } /* Offre */
+.events-table th:nth-child(5) { width: 10%; } /* Quantité */
+.events-table th:nth-child(6) { width: 10%; } /* Total */
+.events-table th:nth-child(7) { width: 10%; } /* Action */
+
+/* Cartes mobile */
+.event-card {
+  margin-bottom: 1rem;
+}
+
+.event-card-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-card-text {
+  margin-bottom: 0.5rem;
+}
+
+.event-card .mb-2 {
+  margin-bottom: 0.5rem !important;
+}

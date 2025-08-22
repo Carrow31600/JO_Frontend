@@ -7,7 +7,8 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children, navigate }) {
+export function AuthProvider({ children }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(sessionStorage.getItem("access"));
   const [refreshToken, setRefreshToken] = useState(sessionStorage.getItem("refresh"));
@@ -19,29 +20,37 @@ export function AuthProvider({ children, navigate }) {
   }, []);
 
   // =========================
-  // FONCTION GLOBALE 
+  // FETCH AVEC OU SANS AUTH
   // =========================
-  async function fetchWithAuth(url, options = {}) {
+  async function fetchWithAuth(url, options = {}, requireAuth = false) {
     let token = accessToken;
 
-    if (!token && refreshToken) {
-      token = await refreshAccessToken();
+    // Si on force l'auth et qu'il n'y a pas de token → on essaie de refresh
+    if (requireAuth) {
+      if (!token && refreshToken) {
+        token = await refreshAccessToken();
+      }
+      if (!token) {
+        logout();
+        throw new Error("Aucun token disponible pour un appel protégé");
+      }
     }
 
-    if (!token) {
-      logout();
-      throw new Error("Aucun token disponible");
+    // Construction des headers
+    const headers = {
+      ...(options.headers || {}),
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
     }
 
     const res = await fetch(url, {
       ...options,
-      headers: {
-        ...(options.headers || {}),
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
     });
 
-    // Si le token a expiré → on tente un refresh une seule fois
+    // Si token expiré → tentative de refresh
     if (res.status === 401 && refreshToken) {
       token = await refreshAccessToken();
       if (!token) throw new Error("Impossible de rafraîchir le token");
@@ -49,7 +58,7 @@ export function AuthProvider({ children, navigate }) {
       const retryRes = await fetch(url, {
         ...options,
         headers: {
-          ...(options.headers || {}),
+          ...headers,
           Authorization: `Bearer ${token}`,
         },
       });
@@ -146,7 +155,7 @@ export function AuthProvider({ children, navigate }) {
     setRefreshToken(null);
     sessionStorage.removeItem("access");
     sessionStorage.removeItem("refresh");
-    if (navigate) navigate("/");
+    navigate("/");
   }
 
   // =========================
@@ -170,7 +179,7 @@ export function AuthProvider({ children, navigate }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),
-      });
+      }, true); // ici on force requireAuth = true
 
       if (res.ok) {
         const data = await res.json();
@@ -194,7 +203,7 @@ export function AuthProvider({ children, navigate }) {
     try {
       const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/users/me/`, {
         method: "DELETE",
-      });
+      }, true); // idem requireAuth
 
       if (res.ok) {
         logout();
