@@ -38,7 +38,7 @@ export default function CarouselLieux() {
             />
             <Carousel.Caption>
               <h3>{lieu.nom}</h3>
-              <Button variant="light" onClick={() => setSelected(lieu)}>
+              <Button variant="light" onClick={() => setSelected(sport)}>
                 Voir plus
               </Button>
             </Carousel.Caption>
