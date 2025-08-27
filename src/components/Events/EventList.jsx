@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
 import { Table, Card, Form, Button } from "react-bootstrap";
-import "./EventList.css"; // <-- importer le fichier CSS
+import { useCart } from "../Cart/CartContext";
+import "./EventList.css";
 
 function EventList({ events, offers, selections, setSelections, sportsList, lieuxList }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const getSportName = (id) => sportsList?.find((s) => s.id === id)?.nom || id;
-  const getLieuName = (id) => lieuxList?.find((l) => l.id === id)?.nom || id;
 
   const handleChange = (eventId, field, value) => {
     setSelections((prev) => ({
@@ -23,6 +22,20 @@ function EventList({ events, offers, selections, setSelections, sportsList, lieu
       },
     }));
   };
+
+  const handleAddToCart = (event) => {
+    const sel = selections[event.id];
+    if (!sel || !sel.offerId || !sel.quantity || sel.quantity <= 0) return;
+
+    const offer = offers.find((o) => o.id === Number(sel.offerId));
+    if (!offer) return;
+
+    addToCart(event, offer, parseInt(sel.quantity, 10), sportsList, lieuxList);
+  };
+
+
+  const getSportName = (id) => sportsList?.find((s) => s.id === id)?.nom || id;
+  const getLieuName = (id) => lieuxList?.find((l) => l.id === id)?.nom || id;
 
   const renderEventRow = (event) => {
     const sel = selections[event.id] || {};
@@ -61,7 +74,7 @@ function EventList({ events, offers, selections, setSelections, sportsList, lieu
         <td>
           <Button
             disabled={!offerId || !quantity}
-            onClick={() => console.log("Ajouter au panier :", event.id, sel)}
+            onClick={() => handleAddToCart(event)}
           >
             Ajouter au panier
           </Button>
@@ -88,7 +101,6 @@ function EventList({ events, offers, selections, setSelections, sportsList, lieu
                   <strong>Date:</strong> {event.date} <br />
                   <strong>Lieu:</strong> {getLieuName(event.lieu)}
                 </Card.Text>
-
                 <Form.Select
                   value={offerId}
                   onChange={(e) => handleChange(event.id, "offerId", e.target.value)}
@@ -101,7 +113,6 @@ function EventList({ events, offers, selections, setSelections, sportsList, lieu
                     </option>
                   ))}
                 </Form.Select>
-
                 <Form.Control
                   type="number"
                   min="1"
@@ -109,14 +120,12 @@ function EventList({ events, offers, selections, setSelections, sportsList, lieu
                   onChange={(e) => handleChange(event.id, "quantity", e.target.value)}
                   className="mb-2"
                 />
-
                 <div className="mb-2">
                   <strong>Total:</strong> {total ? `${total.toFixed(2)}€` : "-"}
                 </div>
-
                 <Button
                   disabled={!offerId || !quantity}
-                  onClick={() => console.log("Ajouter au panier :", event.id, sel)}
+                  onClick={() => handleAddToCart(event)}
                 >
                   Ajouter au panier
                 </Button>
