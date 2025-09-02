@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './Auth/AuthContext';
 import { CartProvider } from './components/Cart/CartContext';
-import MyNavbar from './components/layout/mynavbar';
+import MyNavbar from './components/layout/MyNavbar';
 import Footer from './components/layout/footer';
 import Layout from './components/layout/layout';
 import HomePage from './pages/homepage';
@@ -19,6 +19,7 @@ import CookiesPage from './pages/Footer/CookiesPage';
 import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
 import AccountUpdatePage from './pages/AccountUpdatePage';
+import MyTickets from './pages/MyTickets';
 
 function AppWithRouter() {
   const navigate = useNavigate(); 
@@ -42,6 +43,7 @@ function AppWithRouter() {
               <Route path="/account/update" element={<AccountUpdatePage />} />
               <Route path="/offers" element={<OffersPage />} />
               <Route path="/offers/:id/edit" element={<OfferUpdatePage />} />
+              <Route path="/my-tickets" element={<MyTickets />} />
               {/* Pages du footer */}
               <Route path="/legal" element={<LegalNotices />} />
               <Route path="/data" element={<PersonalData />} />

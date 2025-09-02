@@ -25,6 +25,7 @@ export default function MyNavbar() {
             {user ? (
               <NavDropdown title="Mon compte" id="nav-dropdown">
                 <NavDropdown.Item href="/account">Gérer mon compte</NavDropdown.Item>
+                <NavDropdown.Item href="/my-tickets">Mes tickets</NavDropdown.Item> {/* ← ajouté */}
                 {logout && <NavDropdown.Item onClick={logout}>Déconnexion</NavDropdown.Item>}
               </NavDropdown>
             ) : (
