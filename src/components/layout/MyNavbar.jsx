@@ -7,6 +7,9 @@ export default function MyNavbar() {
   const user = auth?.user;
   const logout = auth?.logout;
 
+  // Vérifie si l'utilisateur est admin
+  const isAdmin = user?.is_staff; 
+
   return (
     <Navbar bg="light" data-bs-theme="light" expand="lg">
       <Container>
@@ -25,7 +28,7 @@ export default function MyNavbar() {
             {user ? (
               <NavDropdown title="Mon compte" id="nav-dropdown">
                 <NavDropdown.Item href="/account">Gérer mon compte</NavDropdown.Item>
-                <NavDropdown.Item href="/my-tickets">Mes tickets</NavDropdown.Item> {/* ← ajouté */}
+                <NavDropdown.Item href="/my-tickets">Mes tickets</NavDropdown.Item>
                 {logout && <NavDropdown.Item onClick={logout}>Déconnexion</NavDropdown.Item>}
               </NavDropdown>
             ) : (
@@ -33,7 +36,9 @@ export default function MyNavbar() {
             )}
 
             <Nav.Link href="/scan">Scan</Nav.Link>
-            <Nav.Link href="/stats">Stats</Nav.Link>
+
+            {/* Affiche Stats uniquement si user est connecté ET admin */}
+            {user && isAdmin && <Nav.Link href="/stats">Stats</Nav.Link>}
           </Nav>
         </Navbar.Collapse>
       </Container>
