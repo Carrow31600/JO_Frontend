@@ -6,26 +6,29 @@ import { useAuth } from "../Auth/AuthContext";
 
 function CartPage() {
   const { cart, removeFromCart, clearCart } = useCart();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [paymentStatus, setPaymentStatus] = useState(null); // ✅ état pour les messages
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Grand écran ou mobile
+  const [paymentStatus, setPaymentStatus] = useState(null); // état en fonction du paiement
   const navigate = useNavigate();
   const { user, fetchWithAuth } = useAuth();
 
+  // Debug = affiche l'utilisateur dans la console
   useEffect(() => {
-    console.log("👤 Utilisateur connecté :", user);
+    console.log("Utilisateur connecté :", user);
   }, [user]);
 
+  // Gestion du responsive
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Calcul du panier
   const totalHT = cart.reduce((sum, item) => sum + item.total, 0);
   const TVA = totalHT * 0.20;
   const totalTTC = totalHT + TVA;
 
-  // ✅ Fonction de paiement
+  // Fonction de paiement
   const handlePayment = async () => {
     if (!user) {
       setPaymentStatus("not-logged-in");
@@ -33,12 +36,14 @@ function CartPage() {
     }
 
     try {
+       // Transforme le panier en format attendu par l’API
       const lines = cart.map(item => ({
         event: item.eventId,
         offer: item.offerId,
         quantity: item.quantity,
       }));
 
+      // Appel API mock de paiement
       const res = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/payment/mock/`,
         {
@@ -54,16 +59,16 @@ function CartPage() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("✅ Paiement réussi :", data);
+        console.log("Paiement réussi :", data);
         setPaymentStatus("success");
         clearCart();
       } else {
         const err = await res.json();
-        console.error("❌ Erreur paiement :", err);
+        console.error("Erreur paiement :", err);
         setPaymentStatus("error");
       }
     } catch (error) {
-      console.error("❌ Exception paiement :", error);
+      console.error("Exception paiement :", error);
       setPaymentStatus("error");
     }
   };
@@ -98,8 +103,11 @@ function CartPage() {
     </Card>
   );
 
+
+  // Affichage du panier (pc + mobile)
   const renderCartItems = () => {
     if (isMobile) {
+      // affichage de cartes sur mobile
       return cart.map((item, index) => (
         <CartItemCard
           key={index}
@@ -108,6 +116,7 @@ function CartPage() {
         />
       ));
     } else {
+      // Afficga d'un tableau sur PC
       return (
         <Table striped bordered hover>
           <thead>
@@ -153,10 +162,10 @@ function CartPage() {
     <Container className="mt-4">
       <h2 className="text-center mb-4">Mon panier</h2>
 
-      {/* ✅ Toujours afficher les messages de paiement */}
+      {/*Toujours afficher les messages de paiement */}
       {paymentStatus === "not-logged-in" && (
         <Alert variant="warning" className="text-center">
-          ⚠️ Vous devez être connecté pour payer.{" "}
+          Vous devez être connecté pour payer.{" "}
           <span
             onClick={() => navigate("/login")}
             style={{ textDecoration: "underline", cursor: "pointer", color: "blue" }}
@@ -168,13 +177,13 @@ function CartPage() {
 
       {paymentStatus === "success" && (
         <Alert variant="success" className="text-center">
-          ✅ Paiement réussi ! Votre commande a été enregistrée.
+          Paiement réussi ! Votre commande a été enregistrée.
         </Alert>
       )}
 
       {paymentStatus === "error" && (
         <Alert variant="danger" className="text-center">
-          ❌ Le paiement a échoué. Veuillez réessayer.
+          Le paiement a échoué. Veuillez réessayer.
         </Alert>
       )}
 

@@ -4,20 +4,23 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContext";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login } = useAuth();     // Fonction login du contexte Auth
   const navigate = useNavigate();
 
+  //États du formulaire
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  //soumission du formulaire
   async function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault();   // Empêche le rechargement de la page
     setError(null);
     setLoading(true);
 
     try {
+      // Appel à la fonction login (true/false)
       const success = await login(username, password);
 
       if (success) {
@@ -37,6 +40,8 @@ export default function LoginPage() {
     }
   }
 
+
+  // Affichage de la page
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-75">
       <Card className="p-4 shadow-sm" style={{ maxWidth: "400px", width: "100%" }}>

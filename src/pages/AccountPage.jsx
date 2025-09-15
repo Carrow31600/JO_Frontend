@@ -4,13 +4,16 @@ import { useAuth } from "../Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function AccountPage() {
+
   const { user, deleteAccount  } = useAuth();
   const navigate = useNavigate();
 
+  // Modification du compte
   const handleEdit = () => {
     navigate("/account/update");
   };
 
+  // Suppression du compte
   const handleDeleteAccount = async () => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.")) {
       const success = await deleteAccount();
@@ -23,6 +26,7 @@ export default function AccountPage() {
     }
   };
 
+  // Si le user n'est pas encore chargé
   if (!user) {
     return (
       <Container className="d-flex justify-content-center align-items-center min-vh-75">
@@ -31,6 +35,7 @@ export default function AccountPage() {
     );
   }
 
+  // Affichage de la page
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-75">
       <Card className="p-4 shadow-sm" style={{ maxWidth: "400px", width: "100%" }}>

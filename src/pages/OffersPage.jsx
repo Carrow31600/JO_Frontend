@@ -5,6 +5,7 @@ import OfferCard from "../components/Offers/OfferCard";
 import OfferForm from "../components/Offers/OfferForm";
 
 function OffersPage() {
+   // États
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingOffer, setEditingOffer] = useState(null); 
@@ -48,10 +49,10 @@ function OffersPage() {
     }
   };
 
-
+// Création ou modification d'une offre
   const handleSave = async (formData) => {
     try {
-      const hasId = Boolean(editingOffer?.id);
+      const hasId = Boolean(editingOffer?.id);  // true = modification, false = création
       const url = hasId
         ? `${import.meta.env.VITE_API_URL}/offers/${editingOffer.id}/`
         : `${import.meta.env.VITE_API_URL}/offers/`;
@@ -80,7 +81,7 @@ function OffersPage() {
     }
   };
 
-
+  //Gestion des états et erreur
   if (loading) {
     return (
       <Container className="text-center mt-5">
@@ -97,10 +98,12 @@ function OffersPage() {
     );
   }
 
+// Affichage de la page
   return (
     <Container className="mt-4">
       <h2 className="mb-4">Nos Offres</h2>
 
+      {/* Bouton de création d'une nouvelle offre (admin/staff uniquement) */}
       {(isAdmin || isStaff) && !editingOffer && (
         <div className="mb-3">
           <Button variant="success" onClick={() => setEditingOffer({})}>
@@ -109,6 +112,7 @@ function OffersPage() {
         </div>
       )}
 
+      {/* Liste des offres si on n'est pas en mode modification */}
       {editingOffer && (
         <OfferForm
           initialData={editingOffer}

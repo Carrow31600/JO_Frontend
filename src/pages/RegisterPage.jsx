@@ -7,6 +7,7 @@ export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Etats du formulaire
   const [formData, setFormData] = useState({
     username: "",
     first_name: "",
@@ -15,22 +16,27 @@ export default function RegisterPage() {
     password2: "",
   });
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);    // Indique si la requête est en cours
 
+  // saisie dans le formulaire
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+     // Vérifier que les mots de passe correspondent
     if (formData.password !== formData.password2) {
       setError("Les mots de passe ne correspondent pas.");
       return;
     }
 
     setLoading(true);
+
+     // Appel à la fonction d'inscription du contexte Auth
     const success = await register({
       username: formData.username,
       first_name: formData.first_name,
@@ -47,6 +53,7 @@ export default function RegisterPage() {
     }
   };
 
+  // Affichage
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-75">
       <Card className="p-4 shadow-sm" style={{ maxWidth: "400px", width: "100%" }}>

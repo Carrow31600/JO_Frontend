@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useAuth } from "../Auth/AuthContext";
 
+// Couleur du graphique camembert
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function StatsPage() {
@@ -10,20 +11,24 @@ export default function StatsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Chargement des statistiques
   useEffect(() => {
     async function loadStats() {
       try {
+        // Appel API
         const res = await fetchWithAuth(
           `${import.meta.env.VITE_API_URL}/orders/stats/`,
           {},
           true
         );
 
+        // Vérifie si réponse correcte
         if (!res.ok) {
           const errText = await res.text();
           throw new Error(`Erreur API ${res.status}: ${errText}`);
         }
 
+         // Récupère les données
         const data = await res.json();
         setStats(data);
       } catch (err) {
@@ -41,6 +46,7 @@ export default function StatsPage() {
   if (error) return <p className="text-red-500">Erreur: {error}</p>;
   if (!stats) return <p>Aucune donnée disponible.</p>;
 
+  // Affichage
   return (
     <div className="p-6 space-y-8">
       <h1 className="text-2xl font-bold">Statistiques des ventes</h1>

@@ -3,6 +3,7 @@ import { Table, Card, Button, Row, Col, Modal, Container } from "react-bootstrap
 import QRCode from "react-qr-code";
 import { useAuth } from "../Auth/AuthContext";
 
+// vue mobile -> Carte
 function TicketCard({ ticket, onShowQRCode }) {
   return (
     <Card className="mb-3 shadow-sm">
@@ -18,16 +19,19 @@ function TicketCard({ ticket, onShowQRCode }) {
   );
 }
 
+// liste des tickets de l'utilisateur connecté
 function MyTickets() {
   const { fetchWithAuth, user } = useAuth();
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
 
+  // Chargement des tickets
   useEffect(() => {
     if (!user) return;
 
     const fetchTickets = async () => {
       try {
+        // Appel API pour récupérer les tickets de l'utilisateur
         const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/orders/me/`, {}, true);
         if (res.ok) {
           const data = await res.json();
@@ -43,7 +47,7 @@ function MyTickets() {
 
     fetchTickets();
   }, [user]);
-
+  // Si aucun utilisateur n'est connecté → message d'invitation à se connecter
   if (!user) return <p>Veuillez vous connecter pour voir vos tickets.</p>;
 
   return (

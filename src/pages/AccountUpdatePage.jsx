@@ -7,25 +7,30 @@ export default function AccountUpdatePage() {
   const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
 
+  // Etat initial
   const [formData, setFormData] = useState({
     first_name: user?.first_name || "",
     email: user?.email || "",
   });
 
+  // Etats
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Saisie dans le formulaire
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Envoi du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
 
+    // MAJ Profil
     const updated = await updateProfile(formData);
     setLoading(false);
 
@@ -39,6 +44,7 @@ export default function AccountUpdatePage() {
     }
   };
 
+  // Utilisateur pas encore chargé
   if (!user) {
     return (
       <Container className="d-flex justify-content-center align-items-center min-vh-75">
@@ -47,6 +53,7 @@ export default function AccountUpdatePage() {
     );
   }
 
+  // Affichage de la page
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-75">
       <Card className="p-4 shadow-sm" style={{ maxWidth: "400px", width: "100%" }}>
