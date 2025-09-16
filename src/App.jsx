@@ -9,7 +9,7 @@ import OffersPage from './pages/OffersPage';
 import OfferUpdatePage from "./pages/OfferUpdatePage";
 import EventsPage from './pages/EventsPage';
 import CartPage from './pages/cartpage';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/loginpage';
 import ScanPage from './pages/ScanPage';
 import StatsPage from './pages/StatsPage';
 import CookieConsent from './components/layout/CookieConsent';
