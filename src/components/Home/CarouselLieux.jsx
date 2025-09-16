@@ -8,7 +8,7 @@ export default function CarouselLieux() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/lieux/`)
+    fetch(`${import.meta.env.VITE_API_URL}lieux/`)
       .then(res => res.json())
       .then(data => setLieux(data))
       .catch(err => console.error("Erreur fetch lieux:", err));

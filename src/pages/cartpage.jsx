@@ -45,7 +45,7 @@ function CartPage() {
 
       // Appel API mock de paiement
       const res = await fetchWithAuth(
-        `${import.meta.env.VITE_API_URL}/payment/mock/`,
+        `${import.meta.env.VITE_API_URL}payment/mock/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

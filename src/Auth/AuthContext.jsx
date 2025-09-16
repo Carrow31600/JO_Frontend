@@ -88,7 +88,7 @@ export function AuthProvider({ children }) {
 
   async function fetchUser(token = accessToken) {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}users/me/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -112,7 +112,7 @@ export function AuthProvider({ children }) {
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/refresh/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}users/refresh/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh: refreshToken }),
@@ -139,7 +139,7 @@ export function AuthProvider({ children }) {
   // =========================
   async function login(username, password) {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/login/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}users/login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -181,7 +181,7 @@ export function AuthProvider({ children }) {
   // *******************************
 
   async function register(userData) {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/register/`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}users/register/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
@@ -195,7 +195,7 @@ export function AuthProvider({ children }) {
 
   async function updateProfile(updates) {
     try {
-      const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/users/me/`, {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}users/me/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),
@@ -222,7 +222,7 @@ export function AuthProvider({ children }) {
 
   async function deleteAccount() {
     try {
-      const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/users/me/`, {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}users/me/`, {
         method: "DELETE",
       }, true); // Token obligatoire
 

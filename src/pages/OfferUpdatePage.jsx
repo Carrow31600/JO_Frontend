@@ -17,7 +17,7 @@ function OfferUpdatePage() {
   useEffect(() => {
     const fetchOffer = async () => {
       try {
-        const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/offers/${id}/`);
+        const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}offers/${id}/`);
         if (!response.ok) throw new Error("Impossible de charger l'offre");
         const data = await response.json();
         setOffer(data);
@@ -34,7 +34,7 @@ function OfferUpdatePage() {
   // Envoi du formulaire
   const handleUpdate = async (formData) => {
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/offers/${id}/`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}offers/${id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

@@ -23,10 +23,10 @@ function EventsPage() {
     const fetchData = async () => {
       try {
         const [resEvents, resOffers, resSports, resLieux] = await Promise.all([
-          fetchWithAuth(`${import.meta.env.VITE_API_URL}/events/`),
-          fetchWithAuth(`${import.meta.env.VITE_API_URL}/offers/`),
-          fetchWithAuth(`${import.meta.env.VITE_API_URL}/sports/`),
-          fetchWithAuth(`${import.meta.env.VITE_API_URL}/lieux/`),
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}events/`),
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}offers/`),
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}sports/`),
+          fetchWithAuth(`${import.meta.env.VITE_API_URL}lieux/`),
         ]);
 
         // Vérification des réponses

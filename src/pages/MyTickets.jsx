@@ -32,7 +32,7 @@ function MyTickets() {
     const fetchTickets = async () => {
       try {
         // Appel API pour récupérer les tickets de l'utilisateur
-        const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/orders/me/`, {}, true);
+        const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}orders/me/`, {}, true);
         if (res.ok) {
           const data = await res.json();
           console.log("Tickets reçus :", data);

@@ -8,7 +8,7 @@ export default function CarouselSports() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/sports/`)
+    fetch(`${import.meta.env.VITE_API_URL}sports/`)
       .then(res => res.json())
       .then(data => setSports(data))
       .catch(err => console.error("Erreur fetch sports:", err));

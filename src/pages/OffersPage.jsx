@@ -19,7 +19,7 @@ function OffersPage() {
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/offers/`);
+        const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}offers/`);
         if (!response.ok) throw new Error("Erreur lors du chargement des offres");
         const data = await response.json();
         setOffers(data);
@@ -36,7 +36,7 @@ function OffersPage() {
   const handleDelete = async (id) => {
     if (!window.confirm("Supprimer cette offre ?")) return;
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/offers/${id}/`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}offers/${id}/`, {
         method: "DELETE",
       });
       if (response.ok) {

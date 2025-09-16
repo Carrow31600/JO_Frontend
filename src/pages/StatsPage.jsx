@@ -17,7 +17,7 @@ export default function StatsPage() {
       try {
         // Appel API
         const res = await fetchWithAuth(
-          `${import.meta.env.VITE_API_URL}/orders/stats/`,
+          `${import.meta.env.VITE_API_URL}orders/stats/`,
           {},
           true
         );
