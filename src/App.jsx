@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import { AuthProvider } from './Auth/AuthContext';
 import { CartProvider } from './components/Cart/CartContext';
 import MyNavbar from './components/layout/MyNavbar';
-import Footer from './components/layout/footer';
+import Footer from './components/layout/Footer';
 import Layout from './components/layout/layout';
 import HomePage from './pages/homepage';
 import OffersPage from './pages/OffersPage';
