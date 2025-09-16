@@ -1,5 +1,5 @@
 import { Container, Button } from "react-bootstrap";
-import "./Cover.css";
+import "./cover.css";
 
 export default function Cover({ image, title, children }) {
   return (
