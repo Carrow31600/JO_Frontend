@@ -252,3 +252,5 @@ export function AuthProvider({ children }) {
   // Fournit le contexte aux composants enfants
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
+
