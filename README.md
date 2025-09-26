@@ -41,5 +41,36 @@ npm run build
 
 Le projet est ensuite automatiquement déployé sur Vercel, avec la variable d’environnement VITE_API_URL définie dans le dashboard Vercel.
 
-6. **Tests (à venir)**
+## Sécurité
+
+Les échanges entre le frontend et le backend se font exclusivement en HTTPS.
+
+L’authentification est gérée par token via l’API Django REST.
+
+Aucun mot de passe n’est stocké côté front (seul le token est transmis).
+
+## Tests
+
+Les tests sont réalisés avec Vitest : 
+
+npm run test
+
+Des tests unitaires seront ajoutés pour améliorer la qualité du code.
+
+## Evolutions prévues
+
+Interface de scan des billets pour les membres du staff (API déjà disponible côté back).
+
+Ajout de la fonctionnalité mot de passe oublié.
+
+Amélioration de l’UX/UI pour une meilleure ergonomie.
+
+Couverture de tests élargie avec Vitest.
+
+## Etat actuel
+
+Fonctionnel en local et en production.
+
+Tests automatisés : partiellement implémentés avec Vitest.
+
 
