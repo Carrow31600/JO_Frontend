@@ -34,11 +34,9 @@ export default function MyNavbar() {
             ) : (
               <Nav.Link href="/login">Connexion</Nav.Link>
             )}
-{/* 
-            <Nav.Link href="/scan">Scan</Nav.Link> */}
-
+            {/* <Nav.Link href="/scan">Scan</Nav.Link> */}
             {/* Affiche Stats uniquement si user est connecté ET admin */}
-            {/* {user && isAdmin && <Nav.Link href="/stats">Stats</Nav.Link>} */}
+            {user && isAdmin && <Nav.Link href="/stats">Stats</Nav.Link>}
           </Nav>
         </Navbar.Collapse>
       </Container>
